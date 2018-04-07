@@ -1,0 +1,141 @@
+<html>
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+
+        <!-- Bootstrap CSS -->
+        <title>Iš lempos!</title>
+        <style>
+            html {
+            font-family: sans-serif;
+            line-height: 1.15;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            -ms-overflow-style: scrollbar;
+            -webkit-tap-highlight-color: transparent;
+            }
+            .text-center {
+                text-align: center;
+            }
+            .left-column {
+                float: left;
+            }
+            .right-column {
+                float: right;
+            }
+            .clear {
+                clear: both;
+            }
+            .table th,
+            .table td {
+            padding: 0.75rem;
+            vertical-align: top;
+            border-top: 1px solid #dee2e6;
+            }
+            .table-bordered {
+            border: 1px solid #dee2e6;
+            }
+
+            .table-bordered th,
+            .table-bordered td {
+            border: 1px solid #dee2e6;
+            }
+
+            .table-bordered thead th,
+            .table-bordered thead td {
+            border-bottom-width: 2px;
+            }
+            .table .thead-dark th {
+            color: #fff;
+            background-color: #212529;
+            border-color: #32383e;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h4 class="mt-4 mb-0 text-center">SĄSKAITA FAKTŪRA</h4>
+            <h5 class="text-center">Serija ISL Nr. {{ invoice_no }}</h5>
+            <p class="text-center">{{ today }}</p>
+            <hr class="my-4">
+            <div class="row">
+                <div class="left-column col-8">
+                    <h5><b>Pardavėjas</b></h5>
+                    <div>Vardas Pavardė</div>
+                    <div>email@gmail.com</div>
+                    <div>Ind. veiklos paž. nr. xxxxxx</div>
+                    <div>Adresas g. 1, Vilnius</div>
+                </div>
+                <div class="right-column col-4">
+                    <h5><b>Pirkėjas</b></h5>
+                    <div>{{ name }} {{ surname }}</div>
+                    {% if email %}<div>{{ email }}</div>{% endif %}
+                    {% if address %}<div>{{ address }}</div>{% endif %}
+                </div>
+                <div class="clear"></div>
+            </div>
+            <h4 class="mt-4 mb-0 text-center">Užsakymo prekės</h4>
+            <hr class="my-4">
+            <div class="d-print-inline-block"><b>Sąskaitos faktūros numeris:</b> {{ invoice_no }}</div>
+            <br>
+            <table class="table table-bordered table-sm mt-5">
+                <thead class="thead-dark">
+                    <tr>
+                        <!-- <th scope="col">Nr.</th> -->
+                        <th scope="col">Prekės pavadinimas</th>
+                        <th scope="col">Kiekis, vnt.</th>
+                        <th scope="col">vnt. kaina €</th>
+                        <th scope="col">Suma</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in dict_g.items() %}
+                    <tr>
+                        <!-- <th scope="row">{{ key + 1 }}</th> -->
+                        {% for v in value %}
+                        <td>{{ v }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        {% if send %}
+                        <td>Siuntimas</td>
+                        <td>1</td>
+                        <td>2.30</td>
+                        <td>2.30</td>
+                        {% else %}
+                        <td>Siuntimas</td>
+                        <td>0</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <!-- <th></th> -->
+                        <td colspan="2"></td>
+                        <td>Iš viso:</td>
+                        <td>{{ bendra_suma_g }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="left-column col-6">
+                    <h5><b>Sąskaitą išrašė:</b></h5>
+                    <div>Vardas Pavardė</div>
+                </div>
+                <div class="right-column col-6 text-right">
+                    <h5><b>Sąskaitą priėmė:</b></h5>
+                    <div>{{ name }} {{ surname }}</div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <br>
+            <div class="d-print-inline-block mt-4">Atliekant apmokėjimą mokėjimo paskirtyje nurodykite sąskaitos faktūros nr. {{ invoice_no }}</div>
+            <h5 class="mt-4"><b>Rekvizitai mokėjimui:</b></h5>
+            <div class="d-print-inline-block"><b>Gavėjas:</b> </div>
+            <div class="d-print-inline-block"><b>Sąskaitos. nr.:</b> </div>
+            <div class="d-print-inline-block"><b>Bankas:</b> </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="col-md-8 offset-md-2">
+        <span class="anchor" id="formUserEdit"></span>
+        <hr class="my-5">
+
+        <!-- form user info -->
+        <div class="card card-outline-secondary">
+            <div class="card-header">
+                <h3 class="mb-0">Nauja sąskaita-faktūra</h3>
+            </div>
+            <div class="card-body">
+                <form class="form" role="form" autocomplete="off" method="POST" action="{{ url_for('pdf_template') }}" id="needs-validation" novalidate>
+                    {{ form.hidden_tag() }}
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                        <span style="color: red;">{{ message }}</span>
+                        {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                    <h4 class="mt-4 mb-0">Pirkėjo duomenys</h4>
+                    <hr class="my-4">
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label form-control-label">{{ form.name.label.text }}</label>
+                        <div class="col-lg-9">
+                            <input class="form-control" name="{{ form.name.label.field_id }}" type="text" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label form-control-label">{{ form.surname.label.text }}</label>
+                        <div class="col-lg-9">
+                            <input class="form-control" name="{{ form.surname.label.field_id }}" type="text" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label form-control-label">{{ form.email.label.text }}</label>
+                        <div class="col-lg-9">
+                            <input class="form-control" name="{{ form.email.label.field_id }}" type="email" required>
+                        </div>
+                        <div class="invalid-feedback">
+                            Netinkamas el. pašto formatas
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label form-control-label">{{ form.address.label.text }}</label>
+                        <div class="col-lg-9">
+                            <input class="form-control" name="{{ form.address.label.field_id }}" type="text">
+                        </div>
+                    </div>
+                    <br>
+                    <h4 class="mt-4 mb-0">Užsakymo duomenys</h4>
+                    <hr class="my-4">
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label form-control-label">{{ form.invoice_no.label.text }}</label>
+                        <div class="col-lg-9">
+                            <input class="form-control" name="{{ form.invoice_no.label.field_id }}" type="text" required>
+                        </div>
+                    </div>
+                    <br>
+                    <table id="myTable" class=" table order-list">
+                        <thead>
+                            <tr>
+                                <td>Prekė</td>
+                                <td>Kiekis</td>
+                                <td>Kaina</td>
+                                <td>Suma</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>                            
+                                <td class="col-lg-4">
+                                    <input type="text" name="purchase" class="form-control purchase" id="purchase0" required/>
+                                </td>
+                                <td class="col-lg-2">
+                                    <input type="text" onInput="multiply()" name="kiekis" class="form-control" id="1_value1" required/>
+                                </td>
+                                <td class="col-lg-2">
+                                    <input type="text" onInput="multiply()" name="kaina" class="form-control kaina" id="1_value2" required/>
+                                </td>
+                                <td class="col-lg-2">
+                                    <input type="text" onInput="summate()" name="suma" class="form-control suma" id="extend1" readonly/>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="5" style="text-align: left;">
+                                    <input type="button" class="btn btn-lg btn-block " id="addrow" value="Pridėti prekę" />
+                                </td>
+                            </tr>
+                            <tr>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <br>
+                    <div class="form-group row">
+                        <!-- <div class="custom-control custom-checkbox col-lg-10">
+                            <label class="custom-control-label" name="{{ form.send.label.field_id }}" for="{{ form.send.label.field_id }}">Reikalingas siuntimas</label>
+                            <input type="checkbox" class="custom-control-input" id="{{ form.send.label.field_id }}">
+                        </div> -->
+                        <div class="col-lg-2">{{ form.send.label.text }}</div>
+                        <div class="col-lg-8">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" onchange="summate()" class="custom-control-input" id="send_id" name="{{ form.send.label.field_id }}">
+                                <label class="custom-control-label" name="{{ form.send.label.field_id }}" for="send_id">Reikalingas siuntimas</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <input class="form-control" name="sum" value="0" type="text" id="sum_send" readonly>
+                        </div>
+                    </div>
+                    <hr class="my-4">
+                    <div class="form-group row">
+                        <div class="col-lg-7"></div>
+                        <div class="col-lg-3"><label>Bendra suma</label></div>
+                        <div class="col-lg-2"><input  type="text" name="bendra_suma" id="mattotal" class="form-control" readonly></div>
+                    </div>
+                    <hr class="my-4">
+                    <div class="form-group row">
+                        <div class="col-lg-12">
+                            <button type="reset" class="btn btn-secondary btn-lg">Valyti</button>
+                            <button type="submit" class="btn btn-success btn-lg float-right">Peržiūrėti</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /form user info -->
+    </div>
+    <script type="text/javascript">
+            $(document).ready(function () {
+                var counter = 1;
+            
+                $("#addrow").on("click", function () {
+                    var newRow = $("<tr>");
+                    var cols = "";
+                    var add_num = counter + 1
+                    cols += '<td class="col-lg-4"><input type="text" class="form-control purchase" name="purchase" id="purchase' + counter + '"/></td>';
+                    cols += '<td class="col-lg-2"><input type="text" onInput="multiply()" class="form-control kiekis" name="kiekis" id="' + add_num + '_value1"/></td>';
+                    cols += '<td class="col-lg-2"><input type="text" onInput="multiply()" class="form-control kaina" name="kaina" id="' + add_num + '_value2"/></td>';
+                    cols += '<td class="col-lg-2"><input type="text" onInput="summate()" class="form-control suma" name="suma" id="extend' + add_num + '" readonly/></td>'
+
+                    cols += '<td class="col-lg-2"><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Delete"></td>';
+                    newRow.append(cols);
+                    $("table.order-list").append(newRow);
+                    counter++;
+                });
+
+            
+            
+                $("table.order-list").on("click", ".ibtnDel", function (event) {
+                    $(this).closest("tr").remove();       
+                    counter -= 1;
+                    summate();
+                });
+            
+            
+            });
+            
+            
+            
+
+    </script>
+    <script type="text/javascript">
+
+        function multiply() {
+            for (var y = 1; y <= 10; y++) {
+                var extend1 = 1;
+                var id_extend = "extend" + y
+                for (var i = 1; i <= 2; i++) {
+                    var id = y + "_value" + i;
+                    extend1 = extend1 * document.getElementById(id).value;
+                }
+                document.getElementById(id_extend).value = extend1.toFixed(2);
+                summate();  
+            }    
+        }
+            
+
+        function summate() {
+            var mattotal = 0;
+            var sum_length = document.getElementsByName("purchase");
+            for (var i = 1; i <= sum_length.length; i++) {
+                var id = "extend" + i;
+                mattotal = mattotal + document.getElementById(id).value * 1;
+            }
+            var sendPrice = 2.3;
+            var sendDefault = 0;
+            if($('#send_id').not(':checked').length){
+                document.getElementById("sum_send").value = sendDefault.toFixed(2);
+                }
+            else{
+                document.getElementById("sum_send").value = sendPrice.toFixed(2);
+            }
+            total_value = mattotal + document.getElementById("sum_send").value * 1;
+            document.getElementById("mattotal").value = total_value.toFixed(2);
+        }
+    </script>
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}
